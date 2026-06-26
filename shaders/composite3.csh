@@ -7,15 +7,7 @@ uniform mat4 gbufferModelView;
 uniform mat4 gbufferProjection;
 uniform vec3 cameraPosition;
 uniform mat4 gbufferModelViewInverse;
-uniform vec2 screenSize;
-uniform sampler2D gcolor;
-uniform float frameTimeCounter;
-uniform sampler2D noisetex;
-uniform sampler2D colortex7;
 uniform float viewWidth;
-
-uniform float near;
-uniform float far;
 
 layout(std430, binding = 0) coherent buffer PointBuffer {
     uint index;

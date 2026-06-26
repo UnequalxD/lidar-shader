@@ -11,8 +11,6 @@
 //5 = scanning square
 //6 = scanning fullscreen
 
-
-
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex2;
 uniform sampler2D gcolor;
@@ -25,14 +23,11 @@ uniform float aspectRatio;
 uniform bool is_sneaking;
 uniform float frameTimeCounter;
 
-uniform float near;
-uniform float far;
-
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 layout(std430, binding = 0) coherent buffer PointBuffer {
-    uint index;   // This acts as the "Global Write Head"
-    uint count;   // This tracks how many total points are valid
+    uint index;
+    uint count;
     vec4 positions[2048000];
 };
 
@@ -46,37 +41,6 @@ uint hash(uint x) {
 float floatHash(uint x) {
     return float(hash(x)) / 4294967295.0;
 }
-
-float rgb_to_hue(vec4 rgb) {
-    float r = rgb.r;
-    float g = rgb.g;
-    float b = rgb.b;
-
-    float maxval = max(r, max(g, b));
-    float minval = min(r, min(g, b));
-    float delta = maxval - minval;
-
-    // Undefined hue (gray); just return 0
-    if (delta == 0.0)
-        return 0.0;
-
-    float h;
-
-    if (maxval == r) {
-        h = (g - b) / delta;
-        if (g < b)
-            h += 6.0;
-    } else if (maxval == g) {
-        h = (b - r) / delta + 2.0;
-    } else {
-        h = (r - g) / delta + 4.0;
-    }
-
-    h /= 6.0;
-    return h;
-}
-
-
 
 void main() {
     uint beamAmount = uint(Beam_Amount);
@@ -113,7 +77,7 @@ void main() {
     screenPos = vec2(0.5) + vec2(cos(angle) / aspectRatio, sin(angle)) * radius;
     #endif
 
-    #if Shape == 5
+    #if Shape == 5 //cancerous pooshart
     screenPos = vec2(0.5) + vec2(randomrandom.x / aspectRatio - 0.25, (int(frameTimeCounter * 500.0)%1000)/1200.0-0.4+randomrandom.y/40.0)/2.0 * Radius_Multiplier;
     #endif
 
@@ -125,6 +89,7 @@ void main() {
     if (gl_GlobalInvocationID.x % 2 == 1) {
         depth = texture(depthtex2, screenPos).r;
     }
+
     float hue = rgb_to_hue(texture(gcolor, screenPos));
     hue = (texture(gcolor, screenPos).r + texture(gcolor, screenPos).g + texture(gcolor, screenPos).b)/3;
 
